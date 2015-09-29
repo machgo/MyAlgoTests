@@ -91,7 +91,7 @@ public class MyLinkedList<E> implements List<E> {
 	@Override
 	public Position<E> insertBefore(Position<E> p, E o) {
         LNode n = new LNode();
-		LNode pn = (LNode) p;
+		LNode pn = castToLNode(p);
 
         n.elem = o;
         if (pn.prev != null)
@@ -119,14 +119,24 @@ public class MyLinkedList<E> implements List<E> {
 	@Override
 	public void remove(Position<E> p) {
         LNode pn = (LNode) p;
+        //if first 
         if (pn.prev == null)
+        {
             first = pn.next;
+            pn.next.prev = null;
+        }
         else
             pn.prev.next = pn.next;
+        //if last
         if (pn.next == null)
+        {
             last = pn.prev;
+            pn.prev.next = null;
+        }
         else
             pn.next.prev = pn.prev;
+
+        pn = null;
 
 	}
 
@@ -154,16 +164,31 @@ public class MyLinkedList<E> implements List<E> {
 		return false;
 	}
 
+    public String printAll()
+    {
+        LNode p = (LNode)first;
+        String output = "";
+        while(p != null)
+        {
+            output += p.element();
+            output += " | ";
+            p = p.next;
+        }
+        return output;
+    }
+
+
 	public static void main(String[] args) {
 		List<String> ll = new MyLinkedList<>(); 
 		Position<String> p = ll.insertFirst("hans");
-		ll.insertFirst("beat");
 		ll.insertFirst("ida");
+        System.out.println(((MyLinkedList)ll).printAll());
 		ll.insertAfter(p,"hans 2");
+        System.out.println(((MyLinkedList)ll).printAll());
         ll.insertBefore(p, "blubb");
+        System.out.println(((MyLinkedList)ll).printAll());
         ll.remove(ll.previous(p));
-		System.out.println(ll.previous(p).element());
-		System.out.println(ll.previous(ll.previous(p)).element());
+        System.out.println(((MyLinkedList)ll).printAll());
 //		Iterator<String> it = ll.elements();
 //		while (it.hasNext()){
 //			String s = it.next();
