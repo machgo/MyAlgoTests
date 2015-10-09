@@ -1,6 +1,16 @@
 #!/usr/bin/python
 from random import randint
 
+class item:
+    key = 0
+    value = 0
+    def __eq__(self, other):
+        return self.value == other.value
+    def __lt__(self, other):
+        return self.value < other.value
+    def __str__(self):
+        return str(self.value)
+
 def get_parent(pos):
     return (pos-1)/2
 
@@ -18,6 +28,9 @@ def upheap(data, pos):
         temp = data[pos]
         data[pos] = data[get_parent(pos)]
         data[get_parent(pos)] = temp
+        tpos = data[pos].key
+        data[pos].key = data[get_parent(pos)].key
+        data[get_parent(pos)].key = tpos
         upheap(data, get_parent(pos))
 
 def downheap(data,pos):
@@ -33,6 +46,9 @@ def downheap(data,pos):
             temp = data[pos]
             data[pos] = data[biggest]
             data[biggest] = temp
+            tpos = data[pos].key
+            data[pos].key = data[biggest].key
+            data[biggest].key = tpos
             downheap(data,biggest)
 
 def heapCheck(data):
@@ -62,26 +78,40 @@ def heapSort(data):
 
 def printTree(data):
     level = 0
+    onlevel = 0
     for i in range(0,len(data)):
         print(data[i]),
+        onlevel+=1
         
-        if i+1 == (2^level):
+        if onlevel == (2**level):
             level+=1
+            onlevel=0
             print
         elif i == 0:
             level+=1
+            onlevel=0
             print
+    print
+
+def insert(data, value):
+    i = item()
+    i.key = len(data)
+    i.value = value
+    data.append(i)
+    upheap(data,i.key)
+    downheap(data,i.key)
+    return i
 
 if __name__ == "__main__":
     print "maxheap example"
 
 data = []
-data.append(1)
-for i in range(0,1024):
-    data.append(randint(0,99999))
-
-heapify(data)
+for i in range(0,999):
+    insert(data,randint(0,9999));
 
 printTree(data)
-print heapSort(data)
+insert(data,444)
+printTree(data)
+
+print printTree(heapSort(data))
 
