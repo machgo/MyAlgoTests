@@ -1,4 +1,5 @@
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class MyLinkedList<E> implements List<E> {
 
@@ -79,13 +80,20 @@ public class MyLinkedList<E> implements List<E> {
 		if (first != null)	first.prev = n;
 		else last = n;
 		first = n;
+		size++;
 		return n;
 	}
 
 	@Override
 	public Position<E> insertLast(E o) {
-		// TODO Auto-generated method stub
-		return null;
+		LNode n = new LNode();
+		n.elem = o;
+		n.prev = last;
+		if (last != null)	last.next = n;
+		else first = n;
+		last = n;
+		size++;
+		return n;
 	}
 
 	@Override
@@ -148,8 +156,22 @@ public class MyLinkedList<E> implements List<E> {
 
 	@Override
 	public Iterator<E> elements() {
-		// TODO Auto-generated method stub
-		return null;
+		return new Iterator<E>(){
+			LNode currentNode = first;
+
+			@Override
+			public boolean hasNext() {
+				return currentNode != null;
+			}
+
+			@Override
+			public E next() {
+				if (currentNode == null) throw new NoSuchElementException("there are no more elments in this LinkedList");
+				LNode ret = currentNode;
+				currentNode = currentNode.next;
+				return ret.elem;
+			}
+		};
 	}
 
 	@Override
