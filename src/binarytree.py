@@ -107,11 +107,33 @@ def next(root):
     else:
         return smallest(root.right)
 
+def treeWalk(root):
+    if root is not None:
+        treeWalk(root.left)
+        print root.value
+        treeWalk(root.right)
+
 def iterate (root):
     node = smallest(root)
     while node is not None:
         print str(node)
         node = next(node)
+
+def closestBefore(root, key):
+    if root.value == key:
+        return root
+    temp = root
+    while temp is not None:
+        before = temp
+        if temp.value < key:
+            temp = temp.left
+        else:
+            temp = temp.right
+        temp = next(temp)
+    return before
+        
+        
+
 
 def updateHeight(root):
     h = 0
@@ -175,4 +197,6 @@ print "smallest number is: %d" % smallest(root).value
 print "biggest number is: %d" % biggest(root).value
 
 iterate(root)
+treeWalk(root)
+print closestBefore(root,1111)
 
