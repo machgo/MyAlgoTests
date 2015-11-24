@@ -3,27 +3,27 @@
 class vertex:
     value = 0
     d = 0
+    inDegree = 0
+    number = 0
     source = None
     edges = None
     def __str__(self):
-        return str(self.value)
+        return "value: {}, number: {}".format(self.value,self.number)
     def __init__(self, value):
         self.value = value
 
 class edge:
-    v1 = None
-    v2 = None
-    def __init__(self, v1, v2):
-        self.v1 = v1
-        self.v2 = v2
+    start = None
+    to = None
+    def __init__(self, start, to):
+        self.start = start
+        self.to = to
 
 def getAdjecents(v):
     result = []
     for i in edges:
-        if i.v1 is v:
-            result.append(i.v2)
-        if i.v2 is v:
-            result.append(i.v1)
+        if i.start is v:
+            result.append(i.to)
     return result
 
 def resetDecoration():
@@ -61,7 +61,7 @@ def bfs():
     ns.append(start)
     while len(ns) > 0:
         i = ns.pop(0)
-        print i.value
+        print i
         tmp = getAdjecents(i)
         for b in tmp:
             if b.d == 0:
@@ -89,6 +89,33 @@ def shortestPath(start, end):
         print i.value
         i = i.source
     print i.value
+
+def getInDegree(node):
+    i = 0
+    for x in edges:
+        if x.to is node:
+            i+=1
+    return i
+
+def topoNumbering():
+    s = []
+    i = 0
+    for v in vertexes:
+       v.inDegree = getInDegree(v)
+       if v.inDegree == 0:
+           s.append(v)
+           print "starting object: {}".format(v.value)
+    while len(s) > 0:
+        item = s.pop(0)
+        print "looking at object: {}".format(item.value)
+        item.number = i
+        i+=1
+        for e in edges:
+            if e.start is item:
+                e.to.inDegree-=1
+                if e.to.inDegree == 0:
+                    print "{} has now 0 inDegree".format(e.to.value)
+                    s.append(e.to)
         
 vertexes = []
 edges = []
@@ -98,20 +125,31 @@ vertexes.append(vertex(3))
 vertexes.append(vertex(4))
 vertexes.append(vertex(5))
 vertexes.append(vertex(6))
-edges.append(edge(vertexes[0],vertexes[1]))
-edges.append(edge(vertexes[0],vertexes[2]))
+vertexes.append(vertex(7))
+vertexes.append(vertex(8))
+vertexes.append(vertex(9))
+edges.append(edge(vertexes[0],vertexes[3]))
+edges.append(edge(vertexes[0],vertexes[4]))
+edges.append(edge(vertexes[1],vertexes[2]))
 edges.append(edge(vertexes[1],vertexes[3]))
-edges.append(edge(vertexes[1],vertexes[4]))
 edges.append(edge(vertexes[2],vertexes[3]))
+edges.append(edge(vertexes[2],vertexes[5]))
+edges.append(edge(vertexes[2],vertexes[7]))
 edges.append(edge(vertexes[3],vertexes[4]))
-edges.append(edge(vertexes[3],vertexes[5]))
+edges.append(edge(vertexes[4],vertexes[6]))
+edges.append(edge(vertexes[4],vertexes[8]))
+edges.append(edge(vertexes[5],vertexes[6]))
+edges.append(edge(vertexes[6],vertexes[8]))
+edges.append(edge(vertexes[7],vertexes[8]))
 
 #visitAll()
-#bfs()
 #shortestPath(vertexes[0],vertexes[4])
+topoNumbering()
 
-print findComponents()
-vertexes.append(vertex(7))
-print findComponents()
-edges.append(edge(vertexes[5],vertexes[6]))
-print findComponents()
+for v in sorted(vertexes, key=lambda vertex: vertex.number):
+    print v
+
+#print findComponents()
+#vertexes.append(vertex(7))
+#print findComponents()
+#edges.append(edge(vertexes[5],vertexes[6]))
