@@ -15,9 +15,11 @@ class vertex:
 class edge:
     start = None
     to = None
-    def __init__(self, start, to):
+    weight = 1 
+    def __init__(self, start, to, weight=1):
         self.start = start
         self.to = to
+        self.weight = weight
 
 def getAdjecents(v):
     result = []
@@ -30,6 +32,8 @@ def resetDecoration():
     for i in vertexes:
         i.d = 0 
         i.source = 0
+        i.number = 0
+        i.inDegree = 0
 
 def goNext(v):
     v.d = 1
@@ -116,6 +120,9 @@ def topoNumbering():
                 if e.to.inDegree == 0:
                     print "{} has now 0 inDegree".format(e.to.value)
                     s.append(e.to)
+
+def allShortestPath():
+    s = []
         
 vertexes = []
 edges = []
